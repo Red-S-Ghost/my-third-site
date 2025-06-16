@@ -1,5 +1,5 @@
 @import url(fontawesome-all.min.css);
-@import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700);
 
 /*
 	Lens by HTML5 UP
@@ -940,7 +940,7 @@ input, select, textarea {
 /* Footer */
 
 	#footer {
-		padding: 2.25em 2.25em 1em 2.25em ;
+		padding: 1.25em 2.25em 1em 2.25em ;
 	}
 
 		#footer .copyright {
@@ -1362,7 +1362,6 @@ input, select, textarea {
     height: calc(var(--vh, 1vh) * 100);
 }
 
-
 /* --- Center alignment for desktop --- */
 @media screen and (min-width: 981px) {
   #header {
@@ -1378,19 +1377,4 @@ input, select, textarea {
     float: none;
     display: inline-block;
   }
-}
-
-
-/* --- Uniform vertical spacing --- */
-#header {
-  padding-bottom: 2.25em;
-}
-
-#footer {
-  padding-top: 2.25em;
-  padding-bottom: 2.25em;
-}
-
-#thumbnails {
-  margin-top: 2.25em;
 }
