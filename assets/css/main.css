@@ -1379,3 +1379,18 @@ input, select, textarea {
     display: inline-block;
   }
 }
+
+
+/* --- Uniform vertical spacing --- */
+#header {
+  padding-bottom: 2.25em;
+}
+
+#footer {
+  padding-top: 2.25em;
+  padding-bottom: 2.25em;
+}
+
+#thumbnails {
+  margin-top: 2.25em;
+}
