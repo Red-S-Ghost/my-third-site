@@ -1,3 +1,4 @@
+```css
 @import url(fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
 
@@ -971,6 +972,7 @@ input, select, textarea {
 		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
 		padding: 0 0.75em;
+		padding-bottom: 0.75em; /* Добавленный отступ снизу */
 	}
 
 		#thumbnails article {
@@ -1269,10 +1271,6 @@ input, select, textarea {
 			opacity: 0;
 		}
 
-		body.is-preload-2 #viewer .slide {
-			opacity: 0;
-		}
-
 		@media screen and (max-width: 1280px) {
 
 			#viewer {
@@ -1303,6 +1301,62 @@ input, select, textarea {
 
 		}
 
+		@media screen and (max-width: 480px) {
+
+			#viewer {
+				-moz-transition: opacity 0.5s ease;
+				-webkit-transition: opacity 0.5s ease;
+				-ms-transition: opacity 0.5s ease;
+				transition: opacity 0.5s ease;
+				-moz-transition-delay: 0s;
+				-webkit-transition-delay: 0s;
+				-ms-transition-delay: 0s;
+				transition-delay: 0s;
+				opacity: 0;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%; /* Начальная высота 100% от видимой области */
+				min-height: 100vh; /* Минимальная высота равна высоте viewport */
+				overflow: hidden;
+			}
+
+			#viewer .inner {
+				height: 100%; /* Убеждаемся, что внутренний контейнер занимает всю высоту */
+			}
+
+			#viewer .slide {
+				height: 100%; /* Изображение занимает всю высоту контейнера */
+			}
+
+			#viewer .slide .image {
+				height: 100%; /* Изображение растягивается на всю доступную высоту */
+				object-fit: cover; /* Изображение масштабируется без искажений */
+			}
+
+			#viewer .slide .caption {
+				padding: 1em;
+				bottom: 0;
+				width: 100%;
+				position: absolute;
+			}
+
+			body.fullscreen #viewer {
+				-moz-transition-delay: 0.5s;
+				-webkit-transition-delay: 0.5s;
+				-ms-transition-delay: 0.5s;
+				transition-delay: 0.5s;
+				opacity: 1;
+			}
+
+			#viewer .inner .toggle {
+				background-image: url("images/close-small.svg") !important;
+				background-size: 32px 32px;
+			}
+
+		}
+
 		@media screen and (max-width: 736px) {
 
 			#viewer .inner .toggle {
@@ -1320,32 +1374,12 @@ input, select, textarea {
 			}
 
 		}
+}
+```
 
-		@media screen and (max-width: 480px) {
+### Примечания:
+- Этот файл включает все предыдущие изменения, такие как `padding-bottom: 0.75em` для `#thumbnails`, и новое решение для `#viewer` на мобильных устройствах.
+- Изображение теперь будет открываться под навигационной панелью и адресной строкой, а при их скрытии `#viewer` будет автоматически занимать весь доступный экран благодаря `height: 100%` и `min-height: 100vh`.
+- Нет необходимости менять `index.html` или добавлять JavaScript — все решается через CSS.
 
-			#viewer {
-				-moz-transition: opacity 0.5s ease;
-				-webkit-transition: opacity 0.5s ease;
-				-ms-transition: opacity 0.5s ease;
-				transition: opacity 0.5s ease;
-				-moz-transition-delay: 0s;
-				-webkit-transition-delay: 0s;
-				-ms-transition-delay: 0s;
-				transition-delay: 0s;
-				opacity: 0;
-			}
-
-				#viewer .inner .toggle {
-					background-image: url("images/close-small.svg") !important;
-					background-size: 32px 32px;
-				}
-
-				body.fullscreen #viewer {
-					-moz-transition-delay: 0.5s;
-					-webkit-transition-delay: 0.5s;
-					-ms-transition-delay: 0.5s;
-					transition-delay: 0.5s;
-					opacity: 1;
-				}
-
-		}
+Сохраните этот файл как `main.css` в папке `assets/css/` и протестируйте на мобильном устройстве. Если что-то не работает, дайте знать, и я помогу доработать!
