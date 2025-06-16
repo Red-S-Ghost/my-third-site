@@ -1,4 +1,3 @@
-```css
 @import url(fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
 
@@ -1204,7 +1203,7 @@ input, select, textarea {
 				left: 0;
 				width: 100%;
 				color: rgba(255, 255, 255, 0.5);
-				z-index: 2; /* Увеличен z-index для видимости над изображением */
+				z-index: 1;
 			}
 
 				#viewer .slide .caption h2, #viewer .slide .caption h3, #viewer .slide .caption h4, #viewer .slide .caption h5, #viewer .slide .caption h6 {
@@ -1223,16 +1222,7 @@ input, select, textarea {
 				height: 100%;
 				background-repeat: no-repeat;
 				background-size: cover;
-				background-position: center;
-				z-index: 1; /* Изображение под подписью */
-				overflow: hidden;
-			}
-
-			#viewer .slide .image img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				display: block; /* Убираем пробелы под изображением */
+				opacity: 0;
 			}
 
 			#viewer .slide:before {
@@ -1257,7 +1247,6 @@ input, select, textarea {
 				background-size: contain;
 				margin: -1.5em 0 0 -1.5em;
 				opacity: 0;
-				z-index: 3; /* Спиннер поверх всего */
 			}
 
 			#viewer .slide.loading:before {
@@ -1344,103 +1333,19 @@ input, select, textarea {
 				-ms-transition-delay: 0s;
 				transition-delay: 0s;
 				opacity: 0;
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100vh; /* Полная высота viewport */
-				background: #000; /* Темный фон для отладки */
 			}
 
-			#viewer .inner {
-				position: relative;
-				height: 100vh; /* Убедимся, что внутренний контейнер занимает весь экран */
-			}
+				#viewer .inner .toggle {
+					background-image: url("images/close-small.svg") !important;
+					background-size: 32px 32px;
+				}
 
-			#viewer .slide {
-				position: relative;
-				height: 100vh; /* Слайд занимает всю высоту */
-				width: 100%;
-			}
-
-			#viewer .slide .image {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100vh; /* Изображение занимает всю высоту */
-				overflow: hidden;
-			}
-
-			#viewer .slide .image img {
-				width: 100%;
-				height: 100vh; /* Гарантируем полную высоту */
-				object-fit: cover;
-				display: block;
-			}
-
-			#viewer .slide .caption {
-				background-image: -moz-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
-				background-image: -webkit-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
-				background-image: -ms-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
-				background-image: linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
-				padding: 1em;
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 100%;
-				color: rgba(255, 255, 255, 0.5);
-				z-index: 2;
-				font-size: 0.9em;
-				box-sizing: border-box;
-			}
-
-			#viewer .inner .toggle {
-				background-image: url("images/close-small.svg") !important;
-				background-size: 32px 32px;
-			}
-
-			body.fullscreen #viewer {
-				-moz-transition-delay: 0.5s;
-				-webkit-transition-delay: 0.5s;
-				-ms-transition-delay: 0.5s;
-				transition-delay: 0.5s;
-				opacity: 1;
-			}
+				body.fullscreen #viewer {
+					-moz-transition-delay: 0.5s;
+					-webkit-transition-delay: 0.5s;
+					-ms-transition-delay: 0.5s;
+					transition-delay: 0.5s;
+					opacity: 1;
+				}
 
 		}
-}
-```
-
-### Изменения и диагностика:
-- **Изображение**: 
-  - Добавлен `<img>`-тег внутри `.image` с `object-fit: cover` и `height: 100vh` для гарантированного отображения.
-  - Установлен `overflow: hidden` на `.image` для предотвращения перекрытия.
-  - Добавлен темный фон (`background: #000`) к `#viewer` на мобильных устройствах для отладки — если экран черный, это указывает на проблему с загрузкой изображения.
-- **Текст (caption)**: 
-  - Увеличен `z-index: 2` для подписи, чтобы она оставалась над изображением.
-  - Сохранена градиентная подложка и уменьшенные отступы для мобильной версии.
-- **Общие исправления**:
-  - Установлена `height: 100vh` на `#viewer`, `.inner`, и `.slide` для согласованности высоты.
-  - Убедился, что `position: absolute` и `position: relative` правильно настроены для иерархии слоев.
-
-### Что проверить:
-1. **HTML-структура**: Убедитесь, что ваш HTML для слайда выглядит так:
-   ```html
-   <div class="slide">
-       <div class="image"><img src="images/fulls/01.jpg" alt="" /></div>
-       <div class="caption">Текст подписи</div>
-   </div>
-   ```
-   Если используется `background-image` вместо `<img>`, замените на `<img>`-тег с правильным `src`.
-2. **Пути к файлам**: Проверьте, что изображения (например, `images/fulls/01.jpg`) доступны по указанным путям относительно корня проекта. Откройте консоль браузера (F12) и найдите ошибки 404.
-3. **Стилизация**: Если экран остается черным, это может указывать на то, что изображение не загружается. Проверьте URL в `<img src="...">`.
-4. **Тестирование**: Протестируйте на мобильном устройстве или эмуляторе (например, Chrome DevTools с эмуляцией iPhone). Убедитесь, что `#viewer` становится видимым при активации (например, через `body.fullscreen`).
-
-### Следующие шаги:
-Если проблема сохраняется, пожалуйста, предоставьте:
-- Фрагмент вашего HTML для `<div class="slide">`.
-- Любые ошибки из консоли браузера.
-- Скриншот или описание того, что вы видите (например, черный экран, пустое пространство).
-
-Это поможет мне точно диагностировать и исправить проблему!
