@@ -1204,7 +1204,7 @@ input, select, textarea {
 				left: 0;
 				width: 100%;
 				color: rgba(255, 255, 255, 0.5);
-				z-index: 1;
+				z-index: 2; /* Увеличен z-index для видимости над изображением */
 			}
 
 				#viewer .slide .caption h2, #viewer .slide .caption h3, #viewer .slide .caption h4, #viewer .slide .caption h5, #viewer .slide .caption h6 {
@@ -1224,7 +1224,15 @@ input, select, textarea {
 				background-repeat: no-repeat;
 				background-size: cover;
 				background-position: center;
-				opacity: 0;
+				z-index: 1; /* Изображение под подписью */
+				overflow: hidden;
+			}
+
+			#viewer .slide .image img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block; /* Убираем пробелы под изображением */
 			}
 
 			#viewer .slide:before {
@@ -1249,6 +1257,7 @@ input, select, textarea {
 				background-size: contain;
 				margin: -1.5em 0 0 -1.5em;
 				opacity: 0;
+				z-index: 3; /* Спиннер поверх всего */
 			}
 
 			#viewer .slide.loading:before {
@@ -1339,18 +1348,18 @@ input, select, textarea {
 				top: 0;
 				left: 0;
 				width: 100%;
-				height: 100vh; /* Устанавливаем высоту на 100% от viewport */
-				overflow: hidden;
+				height: 100vh; /* Полная высота viewport */
+				background: #000; /* Темный фон для отладки */
 			}
 
 			#viewer .inner {
 				position: relative;
-				height: 100%;
+				height: 100vh; /* Убедимся, что внутренний контейнер занимает весь экран */
 			}
 
 			#viewer .slide {
 				position: relative;
-				height: 100vh; /* Устанавливаем высоту слайда на 100% viewport */
+				height: 100vh; /* Слайд занимает всю высоту */
 				width: 100%;
 			}
 
@@ -1359,16 +1368,13 @@ input, select, textarea {
 				top: 0;
 				left: 0;
 				width: 100%;
-				height: 100vh; /* Изображение занимает 100% высоты viewport */
-				background-repeat: no-repeat;
-				background-size: cover;
-				background-position: center;
+				height: 100vh; /* Изображение занимает всю высоту */
 				overflow: hidden;
 			}
 
 			#viewer .slide .image img {
 				width: 100%;
-				height: 100vh; /* Изображение занимает 100% высоты viewport */
+				height: 100vh; /* Гарантируем полную высоту */
 				object-fit: cover;
 				display: block;
 			}
@@ -1378,14 +1384,14 @@ input, select, textarea {
 				background-image: -webkit-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
 				background-image: -ms-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
 				background-image: linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
-				padding: 1em; /* Уменьшаем отступы для компактности */
+				padding: 1em;
 				position: absolute;
 				bottom: 0;
 				left: 0;
 				width: 100%;
 				color: rgba(255, 255, 255, 0.5);
-				z-index: 1;
-				font-size: 0.9em; /* Уменьшаем размер текста для мобильных */
+				z-index: 2;
+				font-size: 0.9em;
 				box-sizing: border-box;
 			}
 
@@ -1406,16 +1412,35 @@ input, select, textarea {
 }
 ```
 
-### Изменения и объяснение:
-- **Полноэкранное изображение**: Для мобильной версии (`@media screen and (max-width: 480px)`):
-  - `#viewer`, `#viewer .slide`, и `#viewer .slide .image` теперь используют `height: 100vh` для гарантированного заполнения всей высоты окна браузера, включая случаи, когда адресная строка или панель навигации скрыты.
-  - Добавлен `<img>` внутри `.image` с `object-fit: cover` и `height: 100vh` для корректного отображения изображения как элемента, а не только фона.
-- **Текст (caption)**: Сохранена оригинальная градиентная подложка и позиция `bottom: 0`, с уменьшенными отступами (`padding: 1em`) и размером шрифта (`font-size: 0.9em`) для лучшей читаемости на мобильных устройствах. Текст остается видимым и не перекрывает изображение благодаря `z-index: 1`.
-- **Совместимость**: Обновления не нарушают отображение текста и сохраняют функциональность навигации и переключения слайдов.
+### Изменения и диагностика:
+- **Изображение**: 
+  - Добавлен `<img>`-тег внутри `.image` с `object-fit: cover` и `height: 100vh` для гарантированного отображения.
+  - Установлен `overflow: hidden` на `.image` для предотвращения перекрытия.
+  - Добавлен темный фон (`background: #000`) к `#viewer` на мобильных устройствах для отладки — если экран черный, это указывает на проблему с загрузкой изображения.
+- **Текст (caption)**: 
+  - Увеличен `z-index: 2` для подписи, чтобы она оставалась над изображением.
+  - Сохранена градиентная подложка и уменьшенные отступы для мобильной версии.
+- **Общие исправления**:
+  - Установлена `height: 100vh` на `#viewer`, `.inner`, и `.slide` для согласованности высоты.
+  - Убедился, что `position: absolute` и `position: relative` правильно настроены для иерархии слоев.
 
 ### Что проверить:
-- Убедитесь, что в вашем HTML структура `.slide .image` содержит `<img>`-тег с корректным `src`, например: `<div class="image"><img src="images/fulls/01.jpg" alt="" /></div>`. Если используется только `background-image`, замените на `<img>`-тег для совместимости с этими стилями.
-- Проверьте консоль браузера (F12) на ошибки загрузки изображений (например, 404).
-- Протестируйте на мобильном устройстве или эмуляторе, переключая видимость адресной строки и панели навигации (например, прокручивая вверх/вниз).
+1. **HTML-структура**: Убедитесь, что ваш HTML для слайда выглядит так:
+   ```html
+   <div class="slide">
+       <div class="image"><img src="images/fulls/01.jpg" alt="" /></div>
+       <div class="caption">Текст подписи</div>
+   </div>
+   ```
+   Если используется `background-image` вместо `<img>`, замените на `<img>`-тег с правильным `src`.
+2. **Пути к файлам**: Проверьте, что изображения (например, `images/fulls/01.jpg`) доступны по указанным путям относительно корня проекта. Откройте консоль браузера (F12) и найдите ошибки 404.
+3. **Стилизация**: Если экран остается черным, это может указывать на то, что изображение не загружается. Проверьте URL в `<img src="...">`.
+4. **Тестирование**: Протестируйте на мобильном устройстве или эмуляторе (например, Chrome DevTools с эмуляцией iPhone). Убедитесь, что `#viewer` становится видимым при активации (например, через `body.fullscreen`).
 
-Если проблема сохраняется, предоставьте фрагмент вашего HTML для `.slide`, и я помогу точнее настроить стили!
+### Следующие шаги:
+Если проблема сохраняется, пожалуйста, предоставьте:
+- Фрагмент вашего HTML для `<div class="slide">`.
+- Любые ошибки из консоли браузера.
+- Скриншот или описание того, что вы видите (например, черный экран, пустое пространство).
+
+Это поможет мне точно диагностировать и исправить проблему!
