@@ -1361,3 +1361,21 @@ input, select, textarea {
 #viewer .slide .image {
     height: calc(var(--vh, 1vh) * 100);
 }
+
+
+/* --- Center alignment for desktop --- */
+@media screen and (min-width: 981px) {
+  #header {
+    text-align: center;
+  }
+
+  #footer .copyright {
+    text-align: center;
+    width: 100%;
+  }
+
+  #footer .copyright li {
+    float: none;
+    display: inline-block;
+  }
+}
