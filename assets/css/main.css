@@ -972,7 +972,6 @@ input, select, textarea {
 		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
 		padding: 0 0.75em;
-		padding-bottom: 0.75em; /* Добавленный отступ снизу */
 	}
 
 		#thumbnails article {
@@ -1224,6 +1223,7 @@ input, select, textarea {
 				height: 100%;
 				background-repeat: no-repeat;
 				background-size: cover;
+				background-position: center;
 				opacity: 0;
 			}
 
@@ -1271,6 +1271,10 @@ input, select, textarea {
 			opacity: 0;
 		}
 
+		body.is-preload-2 #viewer .slide {
+			opacity: 0;
+		}
+
 		@media screen and (max-width: 1280px) {
 
 			#viewer {
@@ -1301,81 +1305,6 @@ input, select, textarea {
 
 		}
 
-		@media screen and (max-width: 480px) {
-
-			#viewer {
-				-moz-transition: opacity 0.5s ease;
-				-webkit-transition: opacity 0.5s ease;
-				-ms-transition: opacity 0.5s ease;
-				transition: opacity 0.5s ease;
-				-moz-transition-delay: 0s;
-				-webkit-transition-delay: 0s;
-				-ms-transition-delay: 0s;
-				transition-delay: 0s;
-				opacity: 0;
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%; /* Начальная высота 100% от видимой области */
-				min-height: 100vh; /* Минимальная высота равна высоте viewport */
-				overflow: hidden;
-			}
-
-			#viewer .inner {
-				position: relative;
-				height: 100%;
-			}
-
-			#viewer .slide {
-				position: relative;
-				height: 100%;
-				width: 100%;
-			}
-
-			#viewer .slide .image {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				overflow: hidden;
-			}
-
-			#viewer .slide .image img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover; /* Масштабируем изображение без искажений */
-				display: block; /* Убираем возможные пробелы под изображением */
-			}
-
-			#viewer .slide .caption {
-				position: fixed; /* Фиксируем подпись внизу экрана */
-				bottom: 0;
-				left: 0;
-				width: 100%;
-				padding: 1em;
-				color: rgba(255, 255, 255, 0.5); /* Сохраняем цвет текста */
-				box-sizing: border-box;
-				z-index: 2; /* Убеждаемся, что подпись поверх изображения */
-				font-size: 0.9em; /* Уменьшаем размер текста для компактности */
-			}
-
-			body.fullscreen #viewer {
-				-moz-transition-delay: 0.5s;
-				-webkit-transition-delay: 0.5s;
-				-ms-transition-delay: 0.5s;
-				transition-delay: 0.5s;
-				opacity: 1;
-			}
-
-			#viewer .inner .toggle {
-				background-image: url("images/close-small.svg") !important;
-				background-size: 32px 32px;
-			}
-
-		}
-
 		@media screen and (max-width: 736px) {
 
 			#viewer .inner .toggle {
@@ -1393,13 +1322,100 @@ input, select, textarea {
 			}
 
 		}
+
+		@media screen and (max-width: 480px) {
+
+			#viewer {
+				-moz-transition: opacity 0.5s ease;
+				-webkit-transition: opacity 0.5s ease;
+				-ms-transition: opacity 0.5s ease;
+				transition: opacity 0.5s ease;
+				-moz-transition-delay: 0s;
+				-webkit-transition-delay: 0s;
+				-ms-transition-delay: 0s;
+				transition-delay: 0s;
+				opacity: 0;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100vh; /* Устанавливаем высоту на 100% от viewport */
+				overflow: hidden;
+			}
+
+			#viewer .inner {
+				position: relative;
+				height: 100%;
+			}
+
+			#viewer .slide {
+				position: relative;
+				height: 100vh; /* Устанавливаем высоту слайда на 100% viewport */
+				width: 100%;
+			}
+
+			#viewer .slide .image {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100vh; /* Изображение занимает 100% высоты viewport */
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center;
+				overflow: hidden;
+			}
+
+			#viewer .slide .image img {
+				width: 100%;
+				height: 100vh; /* Изображение занимает 100% высоты viewport */
+				object-fit: cover;
+				display: block;
+			}
+
+			#viewer .slide .caption {
+				background-image: -moz-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
+				background-image: -webkit-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
+				background-image: -ms-linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
+				background-image: linear-gradient(bottom, rgba(16,16,16,0.75), rgba(16,16,16,0.25) 80%, rgba(16,16,16,0));
+				padding: 1em; /* Уменьшаем отступы для компактности */
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				color: rgba(255, 255, 255, 0.5);
+				z-index: 1;
+				font-size: 0.9em; /* Уменьшаем размер текста для мобильных */
+				box-sizing: border-box;
+			}
+
+			#viewer .inner .toggle {
+				background-image: url("images/close-small.svg") !important;
+				background-size: 32px 32px;
+			}
+
+			body.fullscreen #viewer {
+				-moz-transition-delay: 0.5s;
+				-webkit-transition-delay: 0.5s;
+				-ms-transition-delay: 0.5s;
+				transition-delay: 0.5s;
+				opacity: 1;
+			}
+
+		}
 }
 ```
 
-### Примечания:
-- **Изображение**: Исправлено отображение изображения в `#viewer .slide .image` на мобильных устройствах, добавив поддержку `<img>` с `object-fit: cover` и `display: block`.
-- **Подпись**: Сохранена фиксированная подпись внизу экрана с `position: fixed`.
-- **Тестирование**: Сохраните файл как `main.css` в папке `assets/css/`, проверьте, что изображения (например, `images/fulls/01.jpg`) доступны по указанным путям, и протестируйте на мобильном устройстве. Изображение должно отображаться, а подпись — оставаться видной.
-- **Будущие обновления**: Я буду предоставлять полный файл `main.css` при каждом запросе, как вы указали.
+### Изменения и объяснение:
+- **Полноэкранное изображение**: Для мобильной версии (`@media screen and (max-width: 480px)`):
+  - `#viewer`, `#viewer .slide`, и `#viewer .slide .image` теперь используют `height: 100vh` для гарантированного заполнения всей высоты окна браузера, включая случаи, когда адресная строка или панель навигации скрыты.
+  - Добавлен `<img>` внутри `.image` с `object-fit: cover` и `height: 100vh` для корректного отображения изображения как элемента, а не только фона.
+- **Текст (caption)**: Сохранена оригинальная градиентная подложка и позиция `bottom: 0`, с уменьшенными отступами (`padding: 1em`) и размером шрифта (`font-size: 0.9em`) для лучшей читаемости на мобильных устройствах. Текст остается видимым и не перекрывает изображение благодаря `z-index: 1`.
+- **Совместимость**: Обновления не нарушают отображение текста и сохраняют функциональность навигации и переключения слайдов.
 
-Если изображение все еще не отображается, проверьте консоль браузера на ошибки загрузки (например, 404) и убедитесь, что структура HTML соответствует ожиданиям (например, `<div class="image"><img src="images/fulls/01.jpg" alt="" /></div>` внутри `.slide`). Дайте знать, если нужны дополнительные корректировки!
+### Что проверить:
+- Убедитесь, что в вашем HTML структура `.slide .image` содержит `<img>`-тег с корректным `src`, например: `<div class="image"><img src="images/fulls/01.jpg" alt="" /></div>`. Если используется только `background-image`, замените на `<img>`-тег для совместимости с этими стилями.
+- Проверьте консоль браузера (F12) на ошибки загрузки изображений (например, 404).
+- Протестируйте на мобильном устройстве или эмуляторе, переключая видимость адресной строки и панели навигации (например, прокручивая вверх/вниз).
+
+Если проблема сохраняется, предоставьте фрагмент вашего HTML для `.slide`, и я помогу точнее настроить стили!
