@@ -64,19 +64,19 @@
         }
         .tm-main-content {
             flex: 1;
-            overflow: hidden; /* Отключаем прокрутку на главной странице */
+            overflow: hidden; /* Отключаем прокрутку по умолчанию */
         }
         .product__description {
             max-height: 80vh; /* Ограничиваем высоту всплывающего раздела */
             overflow-y: auto; /* Включаем прокрутку внутри раздела */
             -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
         }
-        /* Переопределяем стиль из tooplate-style.css для главной страницы */
+        /* Переопределяем стиль из tooplate-style.css */
         .tm-main-content.no-scroll {
             overflow: hidden;
         }
         .tm-main-content.scroll-enabled {
-            overflow: auto; /* Восстанавливаем прокрутку, если раздел открыт */
+            overflow: auto;
         }
     </style>
 
@@ -248,34 +248,5 @@
     <script src="slick/slick.min.js"></script>                  <!-- http://kenwheeler.github.io/slick/ -->  
     <script src="js/anime.min.js"></script>                     <!-- http://animejs.com/ -->
     <script src="js/main.js"></script>  
-    <script>      
-        /* DOM is ready
-        ------------------------------------------------*/
-        $(function(){
-            // По умолчанию отключаем прокрутку на главной странице
-            $('.tm-main-content').addClass('no-scroll');
-
-            // При клике на ссылку меню (открытие раздела)
-            $('.tm-nav-link').on('click', function() {
-                setTimeout(function() {
-                    // Включаем прокрутку для tm-main-content
-                    $('.tm-main-content').removeClass('no-scroll').addClass('scroll-enabled');
-                    // Убедимся, что product__description имеет прокрутку
-                    $('.product__description').css('overflow-y', 'auto');
-                }, 300); // Задержка для анимации открытия
-            });
-
-            // При клике на кнопку закрытия (details__close)
-            $('.details__close').on('click', function() {
-                setTimeout(function() {
-                    // Отключаем прокрутку для tm-main-content после закрытия
-                    $('.tm-main-content').removeClass('scroll-enabled').addClass('no-scroll');
-                    // Отключаем прокрутку в product__description
-                    $('.product__description').css('overflow-y', 'hidden');
-                }, 300); // Задержка для анимации закрытия
-            });
-        });
-    </script>             
-
 </body>
 </html>
