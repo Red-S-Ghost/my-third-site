@@ -1,17 +1,49 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Pop HTML CSS Template</title>
-<!--
-
-Template 2097 Pop
-
-https://www.tooplate.com/view/2097-pop
-
--->
     <!-- load CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300">  <!-- Google web font "Open Sans" -->
     <link rel="stylesheet" href="css/bootstrap.min.css">                                  <!-- https://getbootstrap.com/ -->
@@ -56,12 +88,10 @@ https://www.tooplate.com/view/2097-pop
                                             <div class="row">
                                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                     <img src="img/welcome-1.jpg" class="img-fluid mb-3">
-                                                    <p>You are allowed to download, modify and use this template for your commercial or business websites. </p>
-                                                    <p>Please tell your friends about <a rel="nofollow" href="https://fb.com/tooplate" target="_parent">Tooplate</a>. That will be very helpful for us. Thank you.</p>    
+                                                    <p>You are allowed to download, modify and use this template for your commercial or business websites.</p>  
                                                 </div>
                                                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                     <p>You are NOT allowed to put this template ZIP file for a download purpose on any template collection website.</p>
-                                                    <p>If you have any kind of question or comment, please feel free to <a rel="nofollow" href="https://www.tooplate.com/contact" target="_parent">contact us</a>. You are welcome.</p>
                                                     <img src="img/welcome-2.jpg" class="img-fluid">
                                                 </div>                                        
                                             </div>
@@ -184,11 +214,6 @@ https://www.tooplate.com/view/2097-pop
                     </div>
                 </div>                
             </div>
-            <footer>
-                <p class="small tm-copyright-text">Copyright &copy; <span class="tm-current-year">2020</span> Your Company. 
-                
-                Design: <a rel="nofollow" href="https://www.tooplate.com" class="tm-text-highlight">Tooplate</a></p>
-            </footer>
         </div> <!-- .tm-main-content -->  
     </div>
     <!-- load JS -->
@@ -199,7 +224,7 @@ https://www.tooplate.com/view/2097-pop
     <script>      
 
         function setupFooter() {
-            var pageHeight = $('.tm-site-header-container').height() + $('footer').height() + 100;
+            var pageHeight = $('.tm-site-header-container').height() + 100;
 
             var main = $('.tm-main-content');
 
@@ -221,7 +246,6 @@ https://www.tooplate.com/view/2097-pop
                 setupFooter();
             });
 
-            $('.tm-current-year').text(new Date().getFullYear());  // Update year in copyright           
         });
 
     </script>             
