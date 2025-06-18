@@ -64,15 +64,19 @@
         }
         .tm-main-content {
             flex: 1;
+            overflow: hidden; /* Отключаем прокрутку на главной странице */
         }
         .product__description {
             max-height: 80vh; /* Ограничиваем высоту всплывающего раздела */
-            overflow-y: auto; /* Включаем вертикальную прокрутку, если контент превышает высоту */
+            overflow-y: auto; /* Включаем прокрутку внутри раздела */
             -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
         }
-        /* Убедимся, что главная страница не создает лишнюю прокрутку */
-        .container.tm-site-header-container {
-            max-height: 100vh;
+        /* Переопределяем стиль из tooplate-style.css для главной страницы */
+        .tm-main-content.no-scroll {
+            overflow: hidden;
+        }
+        .tm-main-content.scroll-enabled {
+            overflow: auto; /* Восстанавливаем прокрутку, если раздел открыт */
         }
     </style>
 
@@ -83,7 +87,7 @@
 <body>
     <div id="tm-bg"></div>
     <div id="tm-wrap">
-        <div class="tm-main-content">
+        <div class="tm-main-content no-scroll">
             <div class="container tm-site-header-container">
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6 col-md-col-xl-6 mb-md-0 mb-sm-4 mb-4 tm-site-header-col">
@@ -245,21 +249,32 @@
     <script src="js/anime.min.js"></script>                     <!-- http://animejs.com/ -->
     <script src="js/main.js"></script>  
     <script>      
-
         /* DOM is ready
         ------------------------------------------------*/
         $(function(){
-            // Устанавливаем высоту контейнера, чтобы избежать лишней прокрутки на главной странице
-            $('.tm-site-header-container').css('max-height', $(window).height() + 'px');
-            
-            // При открытии всплывающего раздела включаем прокрутку внутри него
+            // По умолчанию отключаем прокрутку на главной странице
+            $('.tm-main-content').addClass('no-scroll');
+
+            // При клике на ссылку меню (открытие раздела)
             $('.tm-nav-link').on('click', function() {
                 setTimeout(function() {
+                    // Включаем прокрутку для tm-main-content
+                    $('.tm-main-content').removeClass('no-scroll').addClass('scroll-enabled');
+                    // Убедимся, что product__description имеет прокрутку
                     $('.product__description').css('overflow-y', 'auto');
-                }, 300); // Задержка, чтобы дождаться анимации открытия
+                }, 300); // Задержка для анимации открытия
+            });
+
+            // При клике на кнопку закрытия (details__close)
+            $('.details__close').on('click', function() {
+                setTimeout(function() {
+                    // Отключаем прокрутку для tm-main-content после закрытия
+                    $('.tm-main-content').removeClass('scroll-enabled').addClass('no-scroll');
+                    // Отключаем прокрутку в product__description
+                    $('.product__description').css('overflow-y', 'hidden');
+                }, 300); // Задержка для анимации закрытия
             });
         });
-
     </script>             
 
 </body>
