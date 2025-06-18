@@ -1,73 +1,72 @@
 {
-	class Details {
-		constructor() {
-			this.DOM = {};
+    class Details {
+        constructor() {
+            this.DOM = {};
 
-			const detailsTmpl = `
-			<div class="details__bg details__bg--down">
-				<button class="details__close"><i class="fas fa-2x fa-times icon--cross tm-fa-close"></i></button>
-				<div class="details__description"></div>
-			</div>						
-			`;
+            const detailsTmpl = `
+            <div class="details__bg details__bg--down">
+                <button class="details__close"><i class="fas fa-2x fa-times icon--cross tm-fa-close"></i></button>
+                <div class="details__description"></div>
+            </div>                        
+            `;
 
-			this.DOM.details = document.createElement('div');
-			this.DOM.details.className = 'details';
-			this.DOM.details.innerHTML = detailsTmpl;
-			// DOM.content.appendChild(this.DOM.details);
-			document.getElementById('tm-wrap').appendChild(this.DOM.details);
-			this.init();
-		}
-		init() {
-			this.DOM.bgDown = this.DOM.details.querySelector('.details__bg--down');
-			this.DOM.description = this.DOM.details.querySelector('.details__description');
-			this.DOM.close = this.DOM.details.querySelector('.details__close');
+            this.DOM.details = document.createElement('div');
+            this.DOM.details.className = 'details';
+            this.DOM.details.innerHTML = detailsTmpl;
+            document.getElementById('tm-wrap').appendChild(this.DOM.details);
+            this.init();
+        }
+        init() {
+            this.DOM.bgDown = this.DOM.details.querySelector('.details__bg--down');
+            this.DOM.description = this.DOM.details.querySelector('.details__description');
+            this.DOM.close = this.DOM.details.querySelector('.details__close');
 
-			this.initEvents();
-		}
-		initEvents() {
-			// close page when outside of page is clicked.
-			document.body.addEventListener('click', () => this.close());
-			// prevent close page when inside of page is clicked.
-			this.DOM.bgDown.addEventListener('click', function(event) {
-							event.stopPropagation();
-						});
-			// close page when cross button is clicked.
-			this.DOM.close.addEventListener('click', () => this.close());
-		}
-		fill(info) {
-			// fill current page info
-			this.DOM.description.innerHTML = info.description;
-		}		
-		getProductDetailsRect(){
-			var p = 0;
-			var d = 0;
+            this.initEvents();
+        }
+        initEvents() {
+            // close page when outside of page is clicked.
+            document.body.addEventListener('click', () => this.close());
+            // prevent close page when inside of page is clicked.
+            this.DOM.bgDown.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+            // close page when cross button is clicked.
+            this.DOM.close.addEventListener('click', () => this.close());
+        }
+        fill(info) {
+            // fill current page info
+            this.DOM.description.innerHTML = info.description;
+        }        
+        getProductDetailsRect(){
+            var p = 0;
+            var d = 0;
 
-			try {
-				p = this.DOM.productBg.getBoundingClientRect();
-				d = this.DOM.bgDown.getBoundingClientRect();	
-			}
-			catch(e){}
+            try {
+                p = this.DOM.productBg.getBoundingClientRect();
+                d = this.DOM.bgDown.getBoundingClientRect();    
+            }
+            catch(e){}
 
-			return {
-				productBgRect: p,
-				detailsBgRect: d
-			};
-		}
-		open(data) {
-			if(this.isAnimating) return false;
-			this.isAnimating = true;
+            return {
+                productBgRect: p,
+                detailsBgRect: d
+            };
+        }
+        open(data) {
+            if(this.isAnimating) return false;
+            this.isAnimating = true;
 
-			this.DOM.details.style.display = 'block';  
+            this.DOM.details.style.display = 'block';  
 
-			this.DOM.details.classList.add('details--open');
+            this.DOM.details.classList.add('details--open');
 
-			this.DOM.productBg = data.productBg;
+            this.DOM.productBg = data.productBg;
 
-			this.DOM.productBg.style.opacity = 0;
+            this.DOM.productBg.style.opacity = 0;
 
-			const rect = this.getProductDetailsRect();
+            const rect = this.getProductDetailsRect();
 
-			this.DOM.bgDown.style.transform = `translateX(${rect.productBgRect.left-rect.detailsBgRect.left}px) translateY(${rect.productBgRect.top-rect.detailsBgRect.top}px) scaleX(${rect.productBgRect.width/rect.detailsBgRect.width}) scaleY(${rect.productBgRect.height/rect.detailsBgRect.height})`;
+            this.DOM.bgDown.style.transform = `translateX(${rect.productBgRect.left-rect.detailsBgRect.left}px) translateY(${rect.productBgRect.top-rect.detailsBgRect.top}px) scaleX(${rect.productBgRect.width/rect.detailsBgRect.width}) scaleY(${rect.productBgRect.height/rect.detailsBgRect.height})`;
             this.DOM.bgDown.style.opacity = 1;
 
             // animate background
@@ -80,7 +79,16 @@
                 translateY: 0,
                 scaleX: 1,
                 scaleY: 1,                              
-                complete: () => this.isAnimating = false
+                complete: () => {
+                    this.isAnimating = false;
+                    // Включаем прокрутку для .tm-main-content
+                    document.querySelector('.tm-main-content').classList.remove('no-scroll');
+                    document.querySelector('.tm-main-content').classList.add('scroll-enabled');
+                    // Убедимся, что .product__description имеет прокрутку
+                    document.querySelectorAll('.product__description').forEach(el => {
+                        el.style.overflowY = 'auto';
+                    });
+                }
             });
 
             // animate content
@@ -104,14 +112,14 @@
             this.setCarousel();
 
             window.addEventListener("resize", this.setCarousel);
-		}
-		close() {
-			if(this.isAnimating) return false;
-			this.isAnimating = true;
+        }
+        close() {
+            if(this.isAnimating) return false;
+            this.isAnimating = true;
 
-			this.DOM.details.classList.remove('details--open');
+            this.DOM.details.classList.remove('details--open');
 
-			anime({
+            anime({
                 targets: this.DOM.close,
                 duration: 250,
                 easing: 'easeOutSine',
@@ -149,73 +157,76 @@
                     this.DOM.productBg.style.opacity = 1;
                     this.DOM.details.style.display = 'none';                    
                     this.isAnimating = false;
+                    // Отключаем прокрутку для .tm-main-content
+                    document.querySelector('.tm-main-content').classList.remove('scroll-enabled');
+                    document.querySelector('.tm-main-content').classList.add('no-scroll');
+                    // Отключаем прокрутку в .product__description
+                    document.querySelectorAll('.product__description').forEach(el => {
+                        el.style.overflowY = 'hidden';
+                    });
                 }
             });
-		}
-		// Slick Carousel
-        setCarousel() {
-          
-	        var slider = $('.details .tm-img-slider');
-
-	        if(slider.length) { // check if slider exist
-
-		        if (slider.hasClass('slick-initialized')) {
-		            slider.slick('destroy');
-		        }
-
-		        if($(window).width() > 767){
-		            // Slick carousel
-		            slider.slick({
-		                dots: true,
-		                infinite: true,
-		                slidesToShow: 4,
-		                slidesToScroll: 3
-		            });
-		        }
-		        else {
-		            slider.slick({
-			            dots: true,
-			            infinite: true,
-			            slidesToShow: 2,
-			            slidesToScroll: 1
-		        	});
-		     	}	
-	        }          
         }
-	}; // class Details
+        // Slick Carousel
+        setCarousel() {
+            var slider = $('.details .tm-img-slider');
 
-	class Item {
-		constructor(el) {
-			this.DOM = {};
-			this.DOM.el = el;
-			this.DOM.product = this.DOM.el.querySelector('.product');
-			this.DOM.productBg = this.DOM.product.querySelector('.product__bg');
+            if(slider.length) { // check if slider exist
+                if (slider.hasClass('slick-initialized')) {
+                    slider.slick('destroy');
+                }
 
-			this.info = {
-				description: this.DOM.product.querySelector('.product__description').innerHTML
-			};
+                if($(window).width() > 767){
+                    // Slick carousel
+                    slider.slick({
+                        dots: true,
+                        infinite: true,
+                        slidesToShow: 4,
+                        slidesToScroll: 3
+                    });
+                }
+                else {
+                    slider.slick({
+                        dots: true,
+                        infinite: true,
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    });
+                }    
+            }          
+        }
+    }; // class Details
 
-			this.initEvents();
-		}
-		initEvents() {
-			this.DOM.product.addEventListener('click', () => this.open());
-		}
-		open() {
-			DOM.details.fill(this.info);
-			DOM.details.open({
-				productBg: this.DOM.productBg
-			});
-		}
-	}; // class Item
+    class Item {
+        constructor(el) {
+            this.DOM = {};
+            this.DOM.el = el;
+            this.DOM.product = this.DOM.el.querySelector('.product');
+            this.DOM.productBg = this.DOM.product.querySelector('.product__bg');
 
-	const DOM = {};
-	DOM.grid = document.querySelector('.grid');
-	DOM.content = DOM.grid.parentNode;
-	DOM.gridItems = Array.from(DOM.grid.querySelectorAll('.grid__item'));
-	let items = [];
-	DOM.gridItems.forEach(item => items.push(new Item(item)));
+            this.info = {
+                description: this.DOM.product.querySelector('.product__description').innerHTML
+            };
 
-	DOM.details = new Details();
-};
+            this.initEvents();
+        }
+        initEvents() {
+            this.DOM.product.addEventListener('click', () => this.open());
+        }
+        open() {
+            DOM.details.fill(this.info);
+            DOM.details.open({
+                productBg: this.DOM.productBg
+            });
+        }
+    }; // class Item
 
+    const DOM = {};
+    DOM.grid = document.querySelector('.grid');
+    DOM.content = DOM.grid.parentNode;
+    DOM.gridItems = Array.from(DOM.grid.querySelectorAll('.grid__item'));
+    let items = [];
+    DOM.gridItems.forEach(item => items.push(new Item(item)));
 
+    DOM.details = new Details();
+}
