@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fallout 3: Пустошь</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/assets/favicon.ico" />
+</head>
+<body>
+  <div id="__next">
+    <div class="relative min-h-screen bg-black text-green-400 font-mono overflow-hidden">
+      <div class="absolute inset-0 z-0 bg-[url('/assets/images/bg.jpg')] bg-cover opacity-20 animate-glitch"></div>
+      <header class="fixed top-0 w-full z-10 bg-black/50 backdrop-blur-lg flex justify-around py-3">
+        <button class="nav-btn px-4 py-2 rounded-xl border border-green-500 hover:bg-green-800/20 backdrop-blur-md transition bg-green-900/30" data-section="Главная">Главная</button>
+        <button class="nav-btn px-4 py-2 rounded-xl border border-green-500 hover:bg-green-800/20 backdrop-blur-md transition" data-section="Мир Fallout">Мир Fallout</button>
+        <button class="nav-btn px-4 py-2 rounded-xl border border-green-500 hover:bg-green-800/20 backdrop-blur-md transition" data-section="Особенности">Особенности</button>
+        <button class="nav-btn px-4 py-2 rounded-xl border border-green-500 hover:bg-green-800/20 backdrop-blur-md transition" data-section="Скриншоты">Скриншоты</button>
+        <button class="nav-btn px-4 py-2 rounded-xl border border-green-500 hover:bg-green-800/20 backdrop-blur-md transition" data-section="Контакты">Контакты</button>
+        <button class="nav-btn px-4 py-2 rounded-xl border border-green-500 hover:bg-green-800/20 backdrop-blur-md transition" data-section="Прохождение">Прохождение</button>
+      </header>
+      <main class="pt-20 px-6 relative z-10">
+        <section id="Главная" class="section text-center space-y-6">
+          <h1 class="text-4xl md:text-6xl font-bold animate-scanline">Добро пожаловать в Пустошь</h1>
+          <p class="max-w-2xl mx-auto text-lg text-green-300">
+            Исследуйте постапокалиптический мир Fallout 3. Этот сайт вдохновлён ретро-футуризмом и ядерной эстетикой игры.
+          </p>
+        </section>
+        <section id="Мир Fallout" class="section prose prose-invert max-w-4xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-4">Мир Fallout 3</h2>
+          <p>Пустоши Вашингтона — это суровый мир, полный мутантов, рейдеров и тайн. Исследуйте разрушенные города, Убежища и загадочные локации.</p>
+        </section>
+        <section id="Особенности" class="section prose prose-invert max-w-4xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-4">Особенности игры</h2>
+          <ul>
+            <li>Свобода выбора и открытый мир</li>
+            <li>Система S.P.E.C.I.A.L. для создания уникального персонажа</li>
+            <li>V.A.T.S. — тактическая боевая система</li>
+            <li>Множество квестов с моральными дилеммами</li>
+          </ul>
+        </section>
+        <section id="Скриншоты" class="section prose prose-invert max-w-4xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-4">Скриншоты</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <img src="/assets/images/screenshot1.jpg" alt="Screenshot 1" class="border border-green-500" />
+            <img src="/assets/images/screenshot2.jpg" alt="Screenshot 2" class="border border-green-500" />
+          </div>
+        </section>
+        <section id="Контакты" class="section prose prose-invert max-w-4xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-4">Контакты</h2>
+          <p>Свяжитесь с нами по радио Пустоши: <a href="mailto:vault101@fallout3.com" class="underline">vault101@fallout3.com</a></p>
+          <p>Или найдите нас в Твиттерграмме: <a href="https://x.com/fallout3vault" class="underline">@Fallout3Vault</a></p>
+        </section>
+        <section id="Прохождение" class="section prose prose-invert max-w-4xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-4">Полное прохождение</h2>
+          <p>Начните из Убежища 101, найдите отца и раскройте тайны проекта «Чистота». Подробное руководство в разработке.</p>
+        </section>
+      </main>
+      <footer class="relative z-10 bg-black/50 backdrop-blur-lg py-4 text-center text-green-300">
+        <p>© 2025 Vault-Tec Industries. Все права защищены.</p>
+        <a href="https://x.com/fallout3vault" class="underline">Следите за нами в Твиттерграмме</a>
+      </footer>
+    </div>
+  </div>
+  <script src="/js/main.js"></script>
+  <script src="/js/index.js"></script>
+</body>
+</html>
