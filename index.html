@@ -1,0 +1,275 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fallout 3: Погружение в Пустошь</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'VT323', monospace;
+      color: #00ff00;
+      background: url('\589298.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+      animation: glitch 10s infinite;
+    }
+
+    @keyframes glitch {
+      0%, 100% { background-position: center; filter: brightness(1); }
+      2% { background-position: calc(50% + 5px); filter: brightness(0.8); }
+      4% { background-position: calc(50% - 5px); filter: brightness(1.2); }
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 20, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    .glass-button {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 10px 20px;
+      background: rgba(0, 255, 0, 0.1);
+      border: 2px solid rgba(0, 255, 0, 0.5);
+      border-radius: 5px;
+      color: #00ff00;
+      text-decoration: none;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-button:hover {
+      background: rgba(0, 255, 0, 0.3);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+    }
+
+    .glass-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .glass-button:hover::before {
+      left: 100%;
+    }
+
+    section {
+      padding: 100px 20px;
+      min-height: 100vh;
+      background: rgba(0, 10, 0, 0.5);
+      margin: 0 auto;
+      max-width: 800px;
+      border: 2px solid rgba(0, 255, 0, 0.2);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2 {
+      text-align: center;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+    }
+
+    p, ul {
+      line-height: 1.6;
+      font-size: 1.1em;
+    }
+
+    .terminal {
+      background: rgba(0, 20, 0, 0.8);
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid #00ff00;
+      box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.5);
+      animation: flicker 2s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 20, 0, 0.7);
+      color: #00ff00;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#home" class="glass-button">Главная</a>
+    <a href="#about" class="glass-button">Об игре</a>
+    <a href="#guide" class="glass-button">Прохождение</a>
+    <a href="#tips" class="glass-button">Советы</a>
+    <a href="#mods" class="glass-button">Моды</a>
+    <a href="#gallery" class="glass-button">Галерея</a>
+  </nav>
+
+  <section id="home">
+    <h1>Fallout 3: Погружение в Пустошь</h1>
+    <div class="terminal">
+      <p>Добро пожаловать в мир Fallout 3 — постапокалиптическую RPG, где каждый выбор определяет вашу судьбу. Исследуйте Столичную Пустошь, сражайтесь с мутантами и раскрывайте секреты разрушенного мира.</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>Об игре</h2>
+    <div class="terminal">
+      <p>Fallout 3 — это Action/RPG с открытым миром, разработанная Bethesda Game Studios и выпущенная в 2008 году. Действие происходит в 2277 году в разрушенном ядерной войной Вашингтоне и окрестностях, известных как Столичная Пустошь. Игрок начинает в Убежище 101 и отправляется в путешествие, полное моральных дилемм и эпических сражений.</p>
+      <ul>
+        <li>Разработчик: Bethesda Game Studios</li>
+        <li>Издатель: Bethesda Softworks</li>
+        <li>Дата выхода: 28 октября 2008</li>
+        <li>Платформы: PC, Xbox 360, PlayStation 3</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="guide">
+    <h2>Полное прохождение</h2>
+    <div class="terminal">
+      <p>Ниже представлено подробное прохождение Fallout 3, основанное на информации с <a href="https://gamesisart.ru/guide/Fallout_3_Prohozhdenie.html">gamesisart.ru</a>. Включает все основные квесты, побочные задания и секреты.</p>
+      <h3>Пролог</h3>
+      <p>Игра начинается с рождения вашего персонажа. Вы выбираете имя, внешность и базовые характеристики (S.P.E.C.I.A.L.). После этого проходите этапы взросления в Убежище 101: детство, тест К.О.З.А., побег из убежища.</p>
+      <h3>Основные квесты</h3>
+      <ul>
+        <li><strong>Побег!</strong> — Покиньте Убежище 101 после того, как ваш отец, Джеймс, исчезает. Найдите путь в Пустошь.</li>
+        <li><strong>По следам</strong> — Отправляйтесь в Мегатонну, найдите Мориарти и узнайте, куда ушел отец.</li>
+        <li><strong>Галактика Новости</strong> — Помогите радиоведущему Три-Дог Найту восстановить сигнал радио.</li>
+        <li><strong>Научные изыскания</strong> — Найдите отца в Ривет-Сити и узнайте о проекте "Чистота".</li>
+        <li><strong>Чистота</strong> — Активируйте очиститель воды, решая судьбу Пустоши.</li>
+      </ul>
+      <h3>Побочные квесты</h3>
+      <p>В игре более 40 побочных квестов, таких как "Сила Атома" (взрыв или обезвреживание бомбы в Мегатонне), "Реплицированные люди" (охота на андроидов) и "Кровные узы" (спасение семьи из лапы вампиров).</p>
+      <h3>DLC</h3>
+      <ul>
+        <li><strong>Operation: Anchorage</strong> — Виртуальная симуляция войны на Аляске.</li>
+        <li><strong>The Pitt</strong> — Путешествие в Питтсбург, выбор между рабами и рейдерами.</li>
+        <li><strong>Broken Steel</strong> — Продолжение основного сюжета.</li>
+        <li><strong>Point Lookout</strong> — Исследование болотистой местности с новыми врагами.</li>
+        <li><strong>Mothership Zeta</strong> — Похищение инопланетянами и бой на космическом корабле.</li>
+      </ul>
+      <p>Подробное описание каждого квеста, включая варианты прохождения и награды, доступно на указанном сайте.</p>
+    </div>
+  </section>
+
+  <section id="tips">
+    <h2>Советы</h2>
+    <div class="terminal">
+      <p>Полезные советы для выживания в Столичной Пустоши:</p>
+      <ul>
+        <li>Собирайте крышки — это основная валюта.</li>
+        <li>Используйте V.A.T.S. для точных атак в бою.</li>
+        <li>Ремонтируйте оружие и броню, чтобы поддерживать их эффективность.</li>
+        <li>Исследуйте локации — в них спрятаны уникальные предметы.</li>
+        <li>Выбирайте перки, соответствующие вашему стилю игры (например, "Кровавая баня" для ближнего боя).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="mods">
+    <h2>Моды</h2>
+    <div class="terminal">
+      <p>Популярные моды для Fallout 3 улучшают графику, анимации и геймплей:</p>
+      <ul>
+        <li><strong>Fallout 3 Re-Animated</strong> — Улучшает анимации персонажей от третьего лица.</li>[](https://bethplanet.ru/fallout-3/mods/animations/fallout-3-re-animated)
+        <li><strong>Fellout</strong> — Убирает зеленый фильтр, делая мир более ярким.</li>
+        <li><strong>Unofficial Fallout 3 Patch</strong> — Исправляет баги и ошибки.</li>
+        <li><strong>Weapon Mod Kits</strong> — Добавляет модификации для оружия.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <h2>Галерея</h2>
+    <div class="terminal">
+      <p>В галерее представлены ключевые моменты игры (изображения заменены текстом, так как вставка реальных картинок невозможна):</p>
+      <ul>
+        <li>Скриншот: Выход из Убежища 101 в ослепительный свет Пустоши.</li>
+        <li>Скриншот: Битва с Когтем Смерти в метро.</li>
+        <li>Скриншот: Вид на разрушенный Вашингтон с мемориала Линкольна.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Fallout 3 Fan Site. Создано для GitHub Pages.</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.glass-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(button.getAttribute('href'));
+        target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
