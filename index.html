@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -52,13 +13,6 @@
       background: url('/589298.jpg') no-repeat center center fixed;
       background-size: cover;
       overflow-x: hidden;
-      animation: glitch 10s infinite;
-    }
-
-    @keyframes glitch {
-      0%, 100% { background-position: center; filter: brightness(1); }
-      2% { background-position: calc(50% + 5px); filter: brightness(0.8); }
-      4% { background-position: calc(50% - 5px); filter: brightness(1.2); }
     }
 
     nav {
@@ -196,12 +150,12 @@
     <div class="terminal">
       <p>Ниже представлено подробное прохождение Fallout 3, основанное на информации с <a href="https://gamesisart.ru/guide/Fallout_3_Prohozhdenie.html">gamesisart.ru</a>. Включает все основные квесты, побочные задания и секреты.</p>
       <h3>Пролог</h3>
-      <p>Игра начинается с рождения вашего персонажа. Вы выбираете имя, внешность и базовые характеристики (S.P.E.C.I.A.L.). После этого проходите этапы взросления в Убежище 101: детство, тест К.О.З.А., побег из убежища.</p>
+      <p>Игра начинается с рождения вашего персонажа. Вы выбираете имя, внешность и базовые характеристики (S.P.E.C.I.A.L.). After this, you go through stages of growing up in Vault 101: childhood, the G.O.A.T. test, and escaping the vault.</p>
       <h3>Основные квесты</h3>
       <ul>
         <li><strong>Побег!</strong> — Покиньте Убежище 101 после того, как ваш отец, Джеймс, исчезает. Найдите путь в Пустошь.</li>
         <li><strong>По следам</strong> — Отправляйтесь в Мегатонну, найдите Мориарти и узнайте, куда ушел отец.</li>
-        <li><strong>Галактика Новости</strong> — Помогите радиоведущему Три-Дог Найту восстановить сигнал радио.</li>
+        <li><strong>ГRuthanasia</strong> — Помогите радиоведущему Три-Дог Найту восстановить сигнал радио.</li>
         <li><strong>Научные изыскания</strong> — Найдите отца в Ривет-Сити и узнайте о проекте "Чистота".</li>
         <li><strong>Чистота</strong> — Активируйте очиститель воды, решая судьбу Пустоши.</li>
       </ul>
@@ -238,7 +192,7 @@
     <div class="terminal">
       <p>Популярные моды для Fallout 3 улучшают графику, анимации и геймплей:</p>
       <ul>
-        <li><strong>Fallout 3 Re-Animated</strong> — Улучшает анимации персонажей от третьего лица.</li>[](https://bethplanet.ru/fallout-3/mods/animations/fallout-3-re-animated)
+        <li><strong>Fallout 3 Re-Animated</strong> — Улучшает анимации персонажей от третьего лица.</li>
         <li><strong>Fellout</strong> — Убирает зеленый фильтр, делая мир более ярким.</li>
         <li><strong>Unofficial Fallout 3 Patch</strong> — Исправляет баги и ошибки.</li>
         <li><strong>Weapon Mod Kits</strong> — Добавляет модификации для оружия.</li>
