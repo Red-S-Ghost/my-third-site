@@ -7,6 +7,10 @@
   <title>Fallout 3: Погружение в Пустошь</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: 'VT323', monospace;
@@ -31,6 +35,7 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
+      transition: max-height 0.3s ease;
     }
 
     .glass-button {
@@ -86,7 +91,7 @@
     }
 
     section {
-      padding: 80px 15px;
+      padding: 80px 5vw;
       min-height: 80vh;
       background: rgba(0, 10, 0, 0.5);
       margin: 20px auto;
@@ -94,12 +99,14 @@
       border: 2px solid rgba(0, 255, 0, 0.2);
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-      animation: fadeIn 1s ease-in;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
+    section.revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     h1, h2 {
@@ -135,9 +142,6 @@
       padding: 15px;
       background: rgba(0, 20, 0, 0.7);
       color: #00ff00;
-      position: relative;
-      bottom: 0;
-      width: 100%;
     }
 
     @media (max-width: 768px) {
@@ -149,18 +153,18 @@
       }
 
       .nav-menu {
-        display: none;
         flex-direction: column;
-        background: rgba(0, 20, 0, 0.9);
+        background: rgba(0, 20, 0, 0.95);
         position: absolute;
-        top: 50px;
+        top: 100%;
         left: 0;
         width: 100%;
-        padding: 10px 0;
+        overflow: hidden;
+        max-height: 0;
       }
 
       .nav-menu.active {
-        display: flex;
+        max-height: 500px;
       }
 
       .glass-button {
@@ -170,15 +174,13 @@
       }
 
       section {
-        padding: 60px 10px;
-        min-height: 60vh;
-        margin: 10px;
+        padding: 60px 5vw;
+        margin: 10px auto;
       }
 
       h1 { font-size: 1.8em; }
       h2 { font-size: 1.3em; }
       p, ul { font-size: 0.95em; }
-      .terminal { padding: 10px; }
     }
 
     @media (max-width: 480px) {
@@ -186,7 +188,6 @@
       h2 { font-size: 1.2em; }
       p, ul { font-size: 0.9em; }
       .glass-button { padding: 6px 8px; font-size: 0.9em; }
-      section { padding: 50px 5px; margin: 5px; }
     }
   </style>
 </head>
@@ -210,8 +211,34 @@
     </div>
   </section>
 
-  <!-- Остальные секции без изменений — они в порядке -->
-  <!-- about, guide, tips, mods, gallery (можно вернуть из вашего файла) -->
+  <section id="about">
+    <h2>Об игре</h2>
+    <p>Fallout 3 — ролевая игра с открытым миром, разработанная Bethesda Game Studios. Она переносит игроков в постъядерный мир, полный опасностей, открытий и моральных выборов.</p>
+  </section>
+
+  <section id="guide">
+    <h2>Прохождение</h2>
+    <p>Следуйте пошаговому гайду для максимального погружения. От выхода из Убежища 101 до финальной битвы — каждая глава содержит советы и маршруты.</p>
+  </section>
+
+  <section id="tips">
+    <h2>Советы</h2>
+    <ul>
+      <li>Сохраняйтесь почаще.</li>
+      <li>Изучайте каждую локацию — сокровища и квесты повсюду.</li>
+      <li>Следите за уровнем радиации и запасами еды.</li>
+    </ul>
+  </section>
+
+  <section id="mods">
+    <h2>Моды</h2>
+    <p>Установите графические улучшения, новый интерфейс, оружие и квесты. NexusMods — отличный старт для изучения.</p>
+  </section>
+
+  <section id="gallery">
+    <h2>Галерея</h2>
+    <p>Скриншоты и арты Fallout 3: культовые сцены, пейзажи пустоши и персонажи.</p>
+  </section>
 
   <footer>
     <p>© 2025 Fallout 3 Fan Site. Создано для GitHub Pages.</p>
@@ -224,6 +251,7 @@
     hamburger.addEventListener('click', () => {
       navMenu.classList.toggle('active');
       hamburger.classList.toggle('active');
+      document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
     });
 
     document.querySelectorAll('.glass-button').forEach(button => {
@@ -232,11 +260,24 @@
         const target = document.querySelector(button.getAttribute('href'));
         navMenu.classList.remove('active');
         hamburger.classList.remove('active');
-        setTimeout(() => {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
+        document.body.style.overflow = 'auto';
+        target.scrollIntoView({ behavior: 'smooth' });
       });
     });
+
+    const revealSections = () => {
+      const sections = document.querySelectorAll('section');
+      const trigger = window.innerHeight * 0.9;
+      sections.forEach(section => {
+        const top = section.getBoundingClientRect().top;
+        if (top < trigger) {
+          section.classList.add('revealed');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealSections);
+    window.addEventListener('load', revealSections);
   </script>
 </body>
 </html>
